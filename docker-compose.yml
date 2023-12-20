@@ -1,0 +1,45 @@
+version: "3.3"
+
+services: 
+
+  wordpress: 
+    image: wordpress
+    ports: 
+      - 8080:80
+    # Dépendance du container Wordpress avec le container db
+    depends_on: 
+      - db
+    environment:
+      WORDPRESS_DB_HOST: db
+      WORDPRESS_DB_USER: root
+      WORDPRESS_DB_PASSWORD: azertysio
+      WORDPRESS_DB_NAME: wordpress
+
+    db : 
+      # Quelle image utilise-t-on ? https://hub.docker.com/_/mariadb
+      image: mariadb
+      # Comportement en cas de plantage
+      restart: always
+
+      # Variables d'environnemnt
+      environment:
+      # Mot de passe par défaut de l'utilisateur root
+        MARIADB_ROOT_PASSWORD: azertysio
+
+      ports: 
+        - 3308:3304
+
+
+    phpmyadmin:
+      # Quelle image utilise-t-on ? https://hub.docker.com/_/mariadb
+      image: phpmyadmin
+      # Comportement en cas de plantage
+      restart: always 
+      # Variables d'environnemnt
+      environment:
+        PMA_HOST: db # L'hôte qui s'appelle db et pas 3304
+        #PMA_USER: sio
+        #PMA_PASSWORD: azertysio
+        
+      ports: 
+        - 8081:80
